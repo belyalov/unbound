@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "unbound",
+    srcs = [
+        "dns.go",
+        "lookup.go",
+        "unbound.go",
+    ],
+    cdeps = [
+        "@//thirdparty/libunbound",
+    ],
+    cgo = True,
+    # keep
+    clinkopts = [],
+    importpath = "github.com/miekg/unbound",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_miekg_dns//:dns"],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":unbound",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "unbound_test",
+    srcs = ["unbound_test.go"],
+    embed = [":unbound"],
+    deps = ["@com_github_miekg_dns//:dns"],
+)
